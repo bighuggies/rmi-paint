@@ -1,37 +1,33 @@
-<project default="compile" name="Single user drawing application">
-
+<project default="compile" name="Multi user drawing application">
 	<description>
-		Script to build a simple single-user drawing application. 
+		Script to build a multi-user drawing application. 
 	</description>
-	
+
 	<!-- Properties for directories -->
 	<property name="srcDir" location="src" />
 	<property name="buildDir" location="bin" />
 	<property name="distDir" location="dist" />
 	<property name="dataDir" location="data" />
-	
+
 	<!-- Default value for the name of the properties file that names the 
 	     classes that implement interface DrawingCommand and that are to be
 	     loaded by a DrawingApp application. -->
 	<property name="propertiesFile" value="${dataDir}/drawing.properties" />
-	
-	
+
 	<target name="init">
 		<!-- Creates build and distribution directories -->
 		<mkdir dir="${buildDir}" />
 		<mkdir dir="${distDir}" />
 	</target>
-	
+
 	<target name="compile" depends="init">
 		<!-- Invokes the usual Java compiler to compile all source files. -->
 		<javac srcDir="${srcDir}" destDir="${buildDir}" />
 	</target>
-	
+
 	<target name="dist" depends="compile">
 		<!-- Creates executable JAR file for the application. -->
-		<jar destfile="${distDir}/client.jar" 
-			baseDir="${buildDir}"
-			includes="client/* client/commands/* service_interface/*">
+		<jar destfile="${distDir}/client.jar" baseDir="${buildDir}" includes="client/* client/commands/* service_interface/*">
 			<manifest>
 				<attribute name="Built-By" value="${user.home}" />
 				<attribute name="Main-Class" value="client.DrawingApp" />
@@ -39,9 +35,7 @@
 			<!-- Creates a JAR for a DrawingApp client that includes
 			     DrawingCommand implementation classes. -->
 		</jar>
-		<jar destfile="${distDir}/bareClient.jar" 
-			baseDir="${buildDir}"
-			includes="client/* service_interface/*">
+		<jar destfile="${distDir}/bareClient.jar" baseDir="${buildDir}" includes="client/* service_interface/*">
 			<manifest>
 				<attribute name="Built-By" value="${user.home}" />
 				<attribute name="Main-Class" value="client.DrawingApp" />
@@ -49,26 +43,51 @@
 			<!-- Creates a JAR for a DrawingApp client that does not include
 			     any DrawingCommand implementation classes. -->
 		</jar>
+		<jar destfile="${distDir}/server.jar" baseDir="${buildDir}" includes="server/* service_interface/* client/commands/*">
+			<manifest>
+				<attribute name="Built-By" value="${user.home}" />
+				<attribute name="Main-Class" value="server.DrawingServerImpl" />
+			</manifest>
+			<!-- Creates a JAR for a DrawingApp server that does not include
+	                 any DrawingCommand implementation classes. -->
+		</jar>
+		<jar destfile="${distDir}/registry.jar" baseDir="${buildDir}" includes="registry/* service_interface/* server/*_Stub.class">
+			<manifest>
+				<attribute name="Built-By" value="${user.home}" />
+			</manifest>
+		</jar>
 	</target>
-		
+
 	<target name="clean">
 		<!-- Wipes the build and distribution directories. -->
 		<delete dir="${buildDir}" />
 		<delete dir="${distDir}" />
 	</target>
-	
+
 	<target name="run_client" depends="dist">
 		<!-- Runs the client process.  -->
 		<java jar="${distDir}/client.jar" fork="true">
-			<arg value="${propertiesFile}" />   
+			<arg value="${propertiesFile}" />
 		</java>
 	</target>
-	
+
 	<target name="run_bareClient" depends="dist">
 		<!-- Runs the bare client process. -->
 		<java jar="${distDir}/bareClient.jar" fork="true">
 			<arg value="${propertiesFile}" />
 		</java>
 	</target>
-		
+
+	<target name="run_server" depends="dist">
+		<!-- Runs the client process.  -->
+		<java jar="${distDir}/server.jar" fork="true">
+		</java>
+	</target>
+
+	<target name="run_registry" depends="dist">
+		<!-- Runs the RMI lookup service. -->
+		<exec executable="rmiregistry" spawn="true">
+			<env key="CLASSPATH" value="${distDir}/registry.jar" />
+		</exec>
+	</target>
 </project>

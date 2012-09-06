@@ -127,6 +127,16 @@ public class DrawingSpace extends JPanel implements DrawingCommandListener {
 		fDrawingSpaceListeners.remove(listener);
 	}
 	
+	public void addDrawingCommand(DrawingCommand cmd) {
+        try {
+            fCommittedDrawingCommands.put(fCommittedDrawingCommands.size(), (DrawingCommand)cmd.clone());
+        } catch (CloneNotSupportedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        repaint();
+	}
+	
 	/**
 	 * DrawingCommandListener method that is called when a DrawingCommand 
 	 * object has generated an event of interest to this DrawingSpace object.
