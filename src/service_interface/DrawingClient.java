@@ -6,5 +6,6 @@ import java.rmi.RemoteException;
 public interface DrawingClient extends Remote {
     String getName() throws RemoteException;
 
-    void receiveDrawingCommandFromServer(DrawingCommand cmd) throws RemoteException;
+    void receiveDrawingCommandFromServer(DrawingCommand cmd)
+            throws RemoteException;
 }

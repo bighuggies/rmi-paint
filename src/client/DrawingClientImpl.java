@@ -33,7 +33,8 @@ public class DrawingClientImpl extends UnicastRemoteObject implements
     }
 
     @Override
-    public void receiveDrawingCommandFromServer(DrawingCommand cmd) throws RemoteException {
+    synchronized public void receiveDrawingCommandFromServer(DrawingCommand cmd)
+            throws RemoteException {
         fDrawingSpace.addCompletedDrawingCommand(cmd);
         fDrawingApp.addDrawingCommand(cmd);
     }

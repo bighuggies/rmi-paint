@@ -56,7 +56,7 @@ public class DrawingServerImpl extends UnicastRemoteObject implements
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
             }
-            
+
             Registry r = LocateRegistry.getRegistry();
             r.rebind("drawingserver", new DrawingServerImpl());
             System.out.println("Bound drawing server");
