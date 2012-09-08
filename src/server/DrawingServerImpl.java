@@ -24,15 +24,16 @@ public class DrawingServerImpl extends UnicastRemoteObject implements
     private ArrayList<DrawingClient> fClients = new ArrayList<DrawingClient>();
 
     @Override
-    synchronized public void addDrawingClient(DrawingClient dsl)
+    synchronized public void addDrawingClient(DrawingClient client)
             throws RemoteException {
-        fClients.add(dsl);
+        fClients.add(client);
+        System.out.println("Registered client " + client.getName());
     }
 
     @Override
-    synchronized public void removeDrawingClient(DrawingClient dsl)
+    synchronized public void removeDrawingClient(DrawingClient client)
             throws RemoteException {
-        fClients.remove(dsl);
+        fClients.remove(client);
     }
 
     @Override
@@ -40,15 +41,9 @@ public class DrawingServerImpl extends UnicastRemoteObject implements
             throws RemoteException {
 
         System.out.println("Received command from " + sender);
-        for (DrawingClient c : fClients) {
-            fThreadPool.execute(new DrawingCommandDispatcher(sender, c, cmd));
+        for (DrawingClient client : fClients) {
+            fThreadPool.execute(new DrawingCommandDispatcher(sender, client, cmd));
         }
-    }
-
-    @Override
-    public void sendDrawingCommand(DrawingClient client, DrawingCommand cmd)
-            throws RemoteException {
-        client.receiveDrawingCommandFromServer(cmd);
     }
 
     /**

@@ -44,15 +44,4 @@ public interface DrawingServer extends Remote {
     public void broadcastDrawingCommand(String sender, DrawingCommand cmd)
             throws RemoteException;
 
-    /**
-     * Send a finished drawing command to a specific drawing client.
-     * 
-     * @param client
-     *            The drawing client to receive the drawing command.
-     * @param cmd
-     *            The finished drawing command to send to the client.
-     * @throws RemoteException
-     */
-    public void sendDrawingCommand(DrawingClient client, DrawingCommand cmd)
-            throws RemoteException;
 }

@@ -5,6 +5,13 @@ import java.rmi.RemoteException;
 import service_interface.DrawingCommand;
 import service_interface.DrawingServer;
 
+/**
+ * Send a completed drawing command to all of the drawing clients also
+ * registered with the server.
+ * 
+ * @author Andrew
+ * 
+ */
 public class DrawingCommandBroadcaster implements Runnable {
 
     DrawingServer fServer;

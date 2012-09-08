@@ -55,11 +55,6 @@
 			<!-- Creates a JAR for a DrawingApp server that does not include
 	                 any DrawingCommand implementation classes. -->
 		</jar>
-		<jar destfile="${distDir}/registry.jar" baseDir="${buildDir}" includes="registry/* service_interface/* server/*_Stub.class">
-			<manifest>
-				<attribute name="Built-By" value="${user.home}" />
-			</manifest>
-		</jar>
 	</target>
 
 	<target name="clean">
@@ -95,7 +90,6 @@
 	<target name="run_registry" depends="dist">
 		<!-- Runs the RMI lookup service. -->
 		<exec executable="rmiregistry" spawn="true">
-			<env key="CLASSPATH" value="${distDir}/registry.jar" />
 		</exec>
 	</target>
 </project>
