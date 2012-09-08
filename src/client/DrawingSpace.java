@@ -124,7 +124,7 @@ public class DrawingSpace extends JPanel implements DrawingCommandListener {
 		fDrawingSpaceListeners.remove(listener);
 	}
 	
-	public void addDrawingCommand(DrawingCommand cmd) {
+	public void addCompletedDrawingCommand(DrawingCommand cmd) {
         try {
             fCommittedDrawingCommands.put(fCommittedDrawingCommands.size(), (DrawingCommand)cmd.clone());
         } catch (CloneNotSupportedException e) {

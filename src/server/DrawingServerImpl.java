@@ -32,7 +32,7 @@ public class DrawingServerImpl extends UnicastRemoteObject implements
     }
 
     @Override
-    public void receiveDrawingCommand(String sender, DrawingCommand cmd)
+    public void broadcastDrawingCommand(String sender, DrawingCommand cmd)
             throws RemoteException {
 
         System.out.println("Received command from " + sender);
@@ -45,7 +45,7 @@ public class DrawingServerImpl extends UnicastRemoteObject implements
     @Override
     public void sendDrawingCommand(DrawingClient client, DrawingCommand cmd)
             throws RemoteException {
-        client.receiveDrawing(cmd);
+        client.receiveDrawingCommandFromServer(cmd);
     }
 
     /**
