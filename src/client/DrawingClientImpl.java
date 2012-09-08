@@ -11,13 +11,17 @@ import service_interface.DrawingServer;
 public class DrawingClientImpl extends UnicastRemoteObject implements
         DrawingClient, DrawingSpaceListener {
 
+    String fName;
+    DrawingApp fDrawingApp;
     DrawingSpace fDrawingSpace;
     DrawingServer fServer;
 
-    protected DrawingClientImpl(DrawingSpace space, DrawingServer server)
-            throws RemoteException {
+    protected DrawingClientImpl(DrawingApp app, DrawingSpace space,
+            DrawingServer server) throws RemoteException {
+        fDrawingApp = app;
         fDrawingSpace = space;
         fServer = server;
+        fName = "canvas" + UUID.randomUUID();
 
         fDrawingSpace.addDrawingSpaceListener(this);
         fServer.addDrawingServerListener(this);
@@ -25,12 +29,13 @@ public class DrawingClientImpl extends UnicastRemoteObject implements
 
     @Override
     public String getName() throws RemoteException {
-        return "canvas" + UUID.randomUUID();
+        return fName;
     }
 
     @Override
     public void receiveDrawing(DrawingCommand cmd) throws RemoteException {
         fDrawingSpace.addDrawingCommand(cmd);
+        fDrawingApp.addDrawingCommand(cmd);
     }
 
     @Override

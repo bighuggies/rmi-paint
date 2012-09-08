@@ -9,10 +9,14 @@
 	<property name="distDir" location="dist" />
 	<property name="dataDir" location="data" />
 
+	<property name="commandCodeBase" value="http://hugbox.spikemeister.com/bin/" />
+
+
 	<!-- Default value for the name of the properties file that names the 
 	     classes that implement interface DrawingCommand and that are to be
 	     loaded by a DrawingApp application. -->
 	<property name="propertiesFile" value="${dataDir}/drawing.properties" />
+	<property name="policyFile" value="${dataDir}/drawing.policy" />
 
 	<target name="init">
 		<!-- Creates build and distribution directories -->
@@ -67,6 +71,7 @@
 	<target name="run_client" depends="dist">
 		<!-- Runs the client process.  -->
 		<java jar="${distDir}/client.jar" fork="true">
+			<sysproperty key="java.security.policy" value="${policyFile}" />
 			<arg value="${propertiesFile}" />
 		</java>
 	</target>
@@ -74,6 +79,7 @@
 	<target name="run_bareClient" depends="dist">
 		<!-- Runs the bare client process. -->
 		<java jar="${distDir}/bareClient.jar" fork="true">
+			<sysproperty key="java.security.policy" value="${policyFile}" />
 			<arg value="${propertiesFile}" />
 		</java>
 	</target>
@@ -81,6 +87,8 @@
 	<target name="run_server" depends="dist">
 		<!-- Runs the client process.  -->
 		<java jar="${distDir}/server.jar" fork="true">
+			<sysproperty key="java.rmi.server.codebase" value="${commandCodeBase}" />
+			<sysproperty key="java.security.policy" value="${policyFile}" />
 		</java>
 	</target>
 

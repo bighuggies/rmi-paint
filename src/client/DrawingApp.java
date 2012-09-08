@@ -46,14 +46,13 @@ public class DrawingApp extends JPanel {
      */
     public DrawingApp(String propertiesFileName) {
         try {
-            // Construct local drawing space. The DrawingSpace object maintains
-            // a reference to this DrawingApp instance so that it can access
-            // useful functionality - this may be helpful in the future.
-            fDrawingSpace = new DrawingSpace(this);
-            fServer = (DrawingServer) LocateRegistry.getRegistry().lookup("drawingserver");
-            
-            DrawingClient c = new DrawingClientImpl(fDrawingSpace, fServer);
-            
+            fDrawingSpace = new DrawingSpace();
+            fServer = (DrawingServer) LocateRegistry.getRegistry().lookup(
+                    "drawingserver");
+
+            DrawingClient c = new DrawingClientImpl(this, fDrawingSpace,
+                    fServer);
+
             // Construct GUI.
             JFrame frame = new JFrame("Drawing application");
             frame.setSize(400, 400);
@@ -126,6 +125,9 @@ public class DrawingApp extends JPanel {
      */
     public static void main(String[] args) {
         if (args.length == 1) {
+            if (System.getSecurityManager() == null) {
+                System.setSecurityManager(new SecurityManager());
+            }
             // Name of properties file specified on the command line.
             new DrawingApp(args[0]);
         } else {

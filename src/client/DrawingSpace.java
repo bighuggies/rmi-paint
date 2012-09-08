@@ -41,16 +41,13 @@ public class DrawingSpace extends JPanel implements DrawingCommandListener {
 	// Currently selected drawing command.
 	private DrawingCommand fSelectedCommand;
 
-	private DrawingApp fDrawingApp;
-
 	/**
 	 * Creates a DrawingSpace object.
 	 */
-	public DrawingSpace(DrawingApp drawingApp) {
+	public DrawingSpace() {
 		fCommittedDrawingCommands = new Hashtable<Integer, DrawingCommand>();
 		fDrawingSpaceListeners = new ArrayList<DrawingSpaceListener>();
 		fSelectedCommand = null;
-		fDrawingApp = drawingApp;
 
 		setBackground(BACKGROUND_COLOR);
 	}
