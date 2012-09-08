@@ -5,6 +5,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import service_interface.DrawingClient;
 import service_interface.DrawingCommand;
@@ -13,20 +15,22 @@ import service_interface.DrawingServer;
 public class DrawingServerImpl extends UnicastRemoteObject implements
         DrawingServer {
 
+    ExecutorService fThreadPool;
+
     protected DrawingServerImpl() throws RemoteException {
-        super();
+        fThreadPool = Executors.newCachedThreadPool();
     }
 
     private ArrayList<DrawingClient> fClients = new ArrayList<DrawingClient>();
 
     @Override
-    public void addDrawingServerListener(DrawingClient dsl)
+    synchronized public void addDrawingClient(DrawingClient dsl)
             throws RemoteException {
         fClients.add(dsl);
     }
 
     @Override
-    public void removeDrawingServerListener(DrawingClient dsl)
+    synchronized public void removeDrawingClient(DrawingClient dsl)
             throws RemoteException {
         fClients.remove(dsl);
     }
@@ -37,8 +41,7 @@ public class DrawingServerImpl extends UnicastRemoteObject implements
 
         System.out.println("Received command from " + sender);
         for (DrawingClient c : fClients) {
-            if (!sender.equalsIgnoreCase(c.getName()))
-                sendDrawingCommand(c, cmd);
+            fThreadPool.execute(new DrawingCommandDispatcher(sender, c, cmd));
         }
     }
 
@@ -63,7 +66,5 @@ public class DrawingServerImpl extends UnicastRemoteObject implements
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-
     }
-
 }

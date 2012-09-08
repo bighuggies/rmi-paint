@@ -126,8 +126,16 @@ public class DrawingSpace extends JPanel implements DrawingCommandListener {
         fDrawingSpaceListeners.remove(listener);
     }
 
-    public void addCompletedDrawingCommand(DrawingCommand cmd) {
+    /**
+     * Add a drawing command to the list of finished commands and repaint the
+     * drawing space.
+     * 
+     * @param cmd
+     */
+    synchronized public void commitDrawingCommand(DrawingCommand cmd) {
         try {
+            // Clone the DrawingCommand and store the copy; this represents
+            // the effect of executing the command.
             fCommittedDrawingCommands.put(fCommittedDrawingCommands.size(),
                     (DrawingCommand) cmd.clone());
         } catch (CloneNotSupportedException e) {
@@ -148,20 +156,12 @@ public class DrawingSpace extends JPanel implements DrawingCommandListener {
             // Render the progress made by the DrawingCommand.
             repaint();
         } else if (event == DrawingCommandEvent.DrawingCompleted) {
-            try {
-                // Clone the DrawingCommand and store the copy; this represents
-                // the effect of executing the command.
-                fCommittedDrawingCommands.put(fCommittedDrawingCommands.size(),
-                        (DrawingCommand) cmd.clone());
-                repaint();
+            commitDrawingCommand(cmd);
 
-                // Notify listeners that a DrawingCommand has completed
-                // execution.
-                for (DrawingSpaceListener listener : fDrawingSpaceListeners) {
-                    listener.drawingCommandExecuted(cmd);
-                }
-            } catch (CloneNotSupportedException e) {
-                // No action necessary. DrawingCommands are cloneable.
+            // Notify listeners that a DrawingCommand has completed
+            // execution.
+            for (DrawingSpaceListener listener : fDrawingSpaceListeners) {
+                listener.drawingCommandExecuted(cmd);
             }
         }
     }

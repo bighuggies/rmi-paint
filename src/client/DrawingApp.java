@@ -50,6 +50,8 @@ public class DrawingApp extends JPanel {
             fServer = (DrawingServer) LocateRegistry.getRegistry().lookup(
                     "drawingserver");
 
+            // Create a client so that this drawing app can interact with the
+            // master drawing server.
             DrawingClient c = new DrawingClientImpl(this, fDrawingSpace,
                     fServer);
 
