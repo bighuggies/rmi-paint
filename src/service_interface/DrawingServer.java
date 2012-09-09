@@ -43,5 +43,4 @@ public interface DrawingServer extends Remote {
      */
     public void broadcastDrawingCommand(String sender, DrawingCommand cmd)
             throws RemoteException;
-
 }

@@ -9,8 +9,7 @@
 	<property name="distDir" location="dist" />
 	<property name="dataDir" location="data" />
 
-	<property name="commandCodeBase" value="http://hugbox.spikemeister.com/bin/" />
-
+	<property name="codeBase" value="http://hugbox.spikemeister.com/bin/" />
 
 	<!-- Default value for the name of the properties file that names the 
 	     classes that implement interface DrawingCommand and that are to be
@@ -47,7 +46,7 @@
 			<!-- Creates a JAR for a DrawingApp client that does not include
 			     any DrawingCommand implementation classes. -->
 		</jar>
-		<jar destfile="${distDir}/server.jar" baseDir="${buildDir}" includes="server/* service_interface/* client/commands/*">
+		<jar destfile="${distDir}/server.jar" baseDir="${buildDir}" includes="server/* service_interface/*">
 			<manifest>
 				<attribute name="Built-By" value="${user.home}" />
 				<attribute name="Main-Class" value="server.DrawingServerImpl" />
@@ -67,6 +66,7 @@
 		<!-- Runs the client process.  -->
 		<java jar="${distDir}/client.jar" fork="true">
 			<sysproperty key="java.security.policy" value="${policyFile}" />
+			<sysproperty key="java.rmi.server.codebase" value="${codeBase}" />
 			<arg value="${propertiesFile}" />
 		</java>
 	</target>
@@ -82,8 +82,8 @@
 	<target name="run_server" depends="dist">
 		<!-- Runs the client process.  -->
 		<java jar="${distDir}/server.jar" fork="true">
-			<sysproperty key="java.rmi.server.codebase" value="${commandCodeBase}" />
 			<sysproperty key="java.security.policy" value="${policyFile}" />
+			<sysproperty key="java.rmi.server.codebase" value="${codeBase}" />
 		</java>
 	</target>
 

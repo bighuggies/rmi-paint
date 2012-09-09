@@ -42,7 +42,8 @@ public class DrawingServerImpl extends UnicastRemoteObject implements
 
         System.out.println("Received command from " + sender);
         for (DrawingClient client : fClients) {
-            fThreadPool.execute(new DrawingCommandDispatcher(sender, client, cmd));
+            fThreadPool.execute(new DrawingCommandDispatcher(sender, client,
+                    cmd));
         }
     }
 
