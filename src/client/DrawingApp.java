@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,8 @@ public class DrawingApp extends JPanel {
 
     private DrawingSpace fDrawingSpace;
     private JMenu fDrawMenu;
-    protected DrawingServer fServer;
+    private DrawingServer fServer;
+    private DrawingClient fClient;
 
     /**
      * Creates a new DrawingApp instance.
@@ -53,13 +55,23 @@ public class DrawingApp extends JPanel {
             fDrawingSpace = new DrawingSpace();
             fServer = (DrawingServer) LocateRegistry.getRegistry(registryHost,
                     registryPort).lookup("drawingserver");
-            
+
             System.out.println("Got remote reference to server.");
 
             // Create a client so that this drawing app can interact with the
             // master drawing server.
-            DrawingClient c = new DrawingClientImpl(this, fDrawingSpace,
-                    fServer);
+            fClient = new DrawingClientImpl(this, fDrawingSpace, fServer);
+
+            // Deregister the client from the server on shutdown.
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                    try {
+                        fServer.removeDrawingClient(fClient);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
             // Construct GUI.
             JFrame frame = new JFrame("Drawing application");

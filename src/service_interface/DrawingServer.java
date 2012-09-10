@@ -14,7 +14,8 @@ import java.util.ArrayList;
 public interface DrawingServer extends Remote {
     /**
      * Whenever a drawing client starts up it will attempt to register with the
-     * server by calling this method.
+     * server by calling this method. The drawing space of the client will be
+     * synchronized with the current shared state of existing clients.
      * 
      * @param client
      *            The client which wishes to register with the server.
