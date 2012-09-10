@@ -14,7 +14,7 @@ public interface DrawingClient extends Remote {
     /**
      * Return a unique name for the drawing client.
      * 
-     * @return
+     * @return A name uniquely identifying the drawing client.
      * @throws RemoteException
      */
     String getName() throws RemoteException;
