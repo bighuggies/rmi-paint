@@ -16,6 +16,7 @@ public class DrawingServerImpl extends UnicastRemoteObject implements
         DrawingServer {
 
     ExecutorService fThreadPool;
+    ArrayList<DrawingCommand> fCompletedDrawingCommands = new ArrayList<DrawingCommand>();
 
     protected DrawingServerImpl() throws RemoteException {
         fThreadPool = Executors.newCachedThreadPool();
@@ -27,6 +28,12 @@ public class DrawingServerImpl extends UnicastRemoteObject implements
     synchronized public void addDrawingClient(DrawingClient client)
             throws RemoteException {
         fClients.add(client);
+        
+        for (DrawingCommand cmd : fCompletedDrawingCommands) {
+            fThreadPool.execute(new DrawingCommandDispatcher("", client,
+                    cmd));
+        }
+        
         System.out.println("Registered client " + client.getName());
     }
 
@@ -40,6 +47,8 @@ public class DrawingServerImpl extends UnicastRemoteObject implements
     public void broadcastDrawingCommand(String sender, DrawingCommand cmd)
             throws RemoteException {
 
+        fCompletedDrawingCommands.add(cmd);
+        
         System.out.println("Received command from " + sender);
         for (DrawingClient client : fClients) {
             fThreadPool.execute(new DrawingCommandDispatcher(sender, client,

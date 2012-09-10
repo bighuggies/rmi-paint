@@ -2,6 +2,7 @@ package service_interface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 /**
  * Remote server to facilitate the broadcast of finished drawing commands
