@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +45,16 @@ public class DrawingApp extends JPanel {
      *            instantiate it. Successfully loaded commands are offered to
      *            the user by being added to the application's "Draw" menu.
      */
-    public DrawingApp(String propertiesFileName) {
+    public DrawingApp(String propertiesFileName, String registryHost,
+            int registryPort) {
         try {
+            System.out.println("Looking up server at " + registryHost + ":"
+                    + registryPort);
             fDrawingSpace = new DrawingSpace();
-            fServer = (DrawingServer) LocateRegistry.getRegistry().lookup(
-                    "drawingserver");
+            fServer = (DrawingServer) LocateRegistry.getRegistry(registryHost,
+                    registryPort).lookup("drawingserver");
+            
+            System.out.println("Got remote reference to server.");
 
             // Create a client so that this drawing app can interact with the
             // master drawing server.
@@ -114,26 +120,6 @@ public class DrawingApp extends JPanel {
             fDrawMenu.add(new JMenuItem(new DrawingAction(fDrawingSpace,
                     command)));
             command.addDrawingCommandListener(fDrawingSpace);
-        }
-    }
-
-    /**
-     * Main program to run the DrawingApp client.
-     * 
-     * @param args
-     *            a command line argument can be supplied to name a properties
-     *            file that names classes which implement the DrawingCommand
-     *            interface.
-     */
-    public static void main(String[] args) {
-        if (args.length == 1) {
-            if (System.getSecurityManager() == null) {
-                System.setSecurityManager(new SecurityManager());
-            }
-            // Name of properties file specified on the command line.
-            new DrawingApp(args[0]);
-        } else {
-            new DrawingApp(null);
         }
     }
 
@@ -210,5 +196,26 @@ public class DrawingApp extends JPanel {
 
         // Return the list of DrawingCommand objects.
         return commands;
+    }
+
+    /**
+     * Main program to run the DrawingApp client.
+     * 
+     * @param args
+     *            Command line arguments can be supplied to name a properties
+     *            file that names classes which implement the DrawingCommand
+     *            interface, an RMI registry host and port.
+     */
+    public static void main(String[] args) {
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new SecurityManager());
+        }
+
+        if (args.length == 3) {
+            // Name of properties file specified on the command line.
+            new DrawingApp(args[0], args[1], Integer.parseInt(args[2]));
+        } else {
+            new DrawingApp(null, "localhost", 1099);
+        }
     }
 }

@@ -9,6 +9,11 @@
 	<property name="distDir" location="dist" />
 	<property name="dataDir" location="data" />
 
+	<!--- Registry host and port -->
+	<property name="registryHost" value="localhost" />
+	<property name="registryPort" value="1099" />
+
+	<!--- Remote codebase URL -->
 	<property name="codeBase" value="http://hugbox.spikemeister.com/bin/" />
 
 	<!-- Default value for the name of the properties file that names the 
@@ -68,6 +73,8 @@
 			<sysproperty key="java.security.policy" value="${policyFile}" />
 			<sysproperty key="java.rmi.server.codebase" value="${codeBase}" />
 			<arg value="${propertiesFile}" />
+			<arg value="${registryHost}" />
+			<arg value="${registryPort}" />
 		</java>
 	</target>
 
@@ -76,6 +83,8 @@
 		<java jar="${distDir}/bareClient.jar" fork="true">
 			<sysproperty key="java.security.policy" value="${policyFile}" />
 			<arg value="${propertiesFile}" />
+			<arg value="${registryHost}" />
+			<arg value="${registryPort}" />
 		</java>
 	</target>
 
@@ -84,6 +93,8 @@
 		<java jar="${distDir}/server.jar" fork="true">
 			<sysproperty key="java.security.policy" value="${policyFile}" />
 			<sysproperty key="java.rmi.server.codebase" value="${codeBase}" />
+			<arg value="${registryHost}" />
+			<arg value="${registryPort}" />
 		</java>
 	</target>
 

@@ -56,7 +56,15 @@ public class DrawingServerImpl extends UnicastRemoteObject implements
                 System.setSecurityManager(new SecurityManager());
             }
 
-            Registry r = LocateRegistry.getRegistry();
+            String registryHost = "localhost";
+            int registryPort = 1099;
+
+            if (args.length == 2) {
+                registryHost = args[0];
+                registryPort = Integer.parseInt(args[1]);
+            }
+
+            Registry r = LocateRegistry.getRegistry(registryHost, registryPort);
             r.rebind("drawingserver", new DrawingServerImpl());
             System.out.println("Bound drawing server");
         } catch (RemoteException e) {
