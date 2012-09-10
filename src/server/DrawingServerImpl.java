@@ -38,6 +38,7 @@ public class DrawingServerImpl extends UnicastRemoteObject implements
     @Override
     synchronized public void removeDrawingClient(DrawingClient client)
             throws RemoteException {
+        System.out.println("De-registering client.");
         fClients.remove(client);
     }
 

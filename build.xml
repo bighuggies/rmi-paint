@@ -1,6 +1,13 @@
 <project default="compile" name="Multi user drawing application">
 	<description>
-		Script to build a multi-user drawing application. 
+		Script to build a multi-user drawing application.
+		
+		Steps for running:
+	    1. Start the RMI registry: run_registry
+	    2. Start the Drawing server: run_server
+	    3. Start any number of clients:
+		   run_client for clients with built in commands
+		   run_bareClient for clients with no built in commands
 	</description>
 
 	<!-- Properties for directories -->
